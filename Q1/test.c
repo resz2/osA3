@@ -7,14 +7,18 @@
 #include<errno.h>
 #include<unistd.h>
 #include<wait.h>
-#include <sys/syscall.h>
+#include<linux/kernel.h>
+#include<sys/syscall.h>
 
 #define SYS_rtnice 441
 
 int main()  {
-   double timeTaken;
    pid_t pid;
-   long res = syscall(441, getpid(), -1);
+   long input;
+   printf("Enter rt_nice value(input will be multiplied by 1000000) :\n");
+   scanf("%ld", &input);
+   long rtval = input*1000000l;
+   long res = syscall(SYS_rtnice, getpid(), rtval);
    printf("process %d has been modified\n\n", getpid());
    if(errno==EIO) {
       perror("invalid input");
@@ -31,7 +35,8 @@ int main()  {
    }
    else if(pid>0)   {
       //with soft real time parameters
-      printf("with %d\n", getpid());
+      printf("process with soft real time parameters : %d\n", getpid());
+      double timeTaken;
       clock_t start, end;
       int temp;
       start = clock();
@@ -41,10 +46,12 @@ int main()  {
       end = clock();
       timeTaken = ((double)(end - start)) / CLOCKS_PER_SEC;
       printf("Time taken with = %f\n", timeTaken);
+      wait(NULL);
    }
    else  {
       //without soft real time parameters
-      printf("w/o %d\n", getpid());
+      printf("process w/o soft real time parameters : %d\n\n", getpid());
+      double timeTaken;
       clock_t start, end;
       int temp;
       start = clock();
@@ -54,7 +61,6 @@ int main()  {
       end = clock();
       timeTaken = ((double)(end - start)) / CLOCKS_PER_SEC;
       printf("Time taken w/o = %f\n", timeTaken);
-      //wait(NULL);
    }
    return 0;
 }
