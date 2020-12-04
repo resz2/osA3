@@ -17,7 +17,7 @@ int main()  {
    long input;
    printf("Enter rt_nice value(input will be multiplied by 1000000) :\n");
    scanf("%ld", &input);
-   long rtval = input*1000000l;
+   long rtval = input*1000000000l;
    pid = fork();
    if(pid<0)  {
       perror("fork() error");
@@ -43,7 +43,7 @@ int main()  {
       int temp;
       gettimeofday(&start, NULL);
       // task
-      for(int i=0;i<1000000000;i++)
+      for(int i=0;i<200000000;i++)
          temp = i;
       gettimeofday(&end, NULL);
       timeTaken = (double)(end.tv_usec - start.tv_usec)/1000 + (double)(end.tv_sec-start.tv_sec)*1000;
@@ -58,7 +58,7 @@ int main()  {
       int temp;
       gettimeofday(&start, NULL);
       // task
-      for(int i=0;i<1000000000;i++)
+      for(int i=0;i<100000000;i++)
          temp = i;
       gettimeofday(&end, NULL);
       timeTaken = (double)(end.tv_usec - start.tv_usec)/1000 + (double)(end.tv_sec-start.tv_sec)*1000;
